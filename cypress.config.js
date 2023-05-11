@@ -5,6 +5,10 @@ const addCucumberPreprocessorPlugin =
 const createEsbuildPlugin =
   require("@badeball/cypress-cucumber-preprocessor/esbuild").createEsbuildPlugin;
 
+//Allure Report
+/// <reference types="@shelex/cypress-allure-plugin" /> 
+  const allureWriter = require('@shelex/cypress-allure-plugin/writer');//For Allure Report
+
 //   stepDefinitions: [
 //     "[filepath]/**/*.{js,ts}",
 //     "[filepath].{js,ts}",
@@ -17,15 +21,20 @@ module.exports = defineConfig({
       // implement node event listeners here
       const bundler = createBundler({
         plugins: [createEsbuildPlugin(config)],
+             
+       
     })
-    on("file:preprocessor", bundler);
+    on('file:preprocessor', bundler);
     await addCucumberPreprocessorPlugin(on, config);
-
+    allureWriter(on, config);
     return config;
+    
   },
-  specPattern: "cypress/e2e/features/*.feature",
+  // *** Note : Uncomment when we want to run Cuucmber ***
+  // specPattern: "cypress/e2e/features/*.feature",
+  specPattern: "cypress/e2e/features/nopcommerceFinal.feature",
   baseUrl: "https://demo.nopcommerce.com/",
   chromeWebSecurity: false,
-  // supportFile: 'cypress/support/commands.js'
+  supportFile: 'cypress/support/commands.js'// Without this cong. cucumber run successfuly
 }
 });
